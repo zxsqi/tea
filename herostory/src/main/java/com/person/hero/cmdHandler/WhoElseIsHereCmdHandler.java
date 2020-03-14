@@ -1,5 +1,6 @@
 package com.person.hero.cmdHandler;
 
+import com.person.hero.model.MoveState;
 import com.person.hero.model.User;
 import com.person.hero.model.UserManager;
 import io.netty.channel.ChannelHandlerContext;
@@ -28,6 +29,20 @@ public class WhoElseIsHereCmdHandler implements ICmdHandler<GameMsgProtocol.WhoE
             GameMsgProtocol.WhoElseIsHereResult.UserInfo.Builder userInfoBuilder = GameMsgProtocol.WhoElseIsHereResult.UserInfo.newBuilder();
             userInfoBuilder.setHeroAvatar(user.heroAvatar);
             userInfoBuilder.setUserId(user.userId);
+
+            //构建移动状态
+            MoveState moveState = user.moveState;
+            GameMsgProtocol.WhoElseIsHereResult.UserInfo.MoveState.Builder mvStateBuilder =
+                    GameMsgProtocol.WhoElseIsHereResult.UserInfo.MoveState.newBuilder();
+            mvStateBuilder.setToPosX(moveState.toPosX);
+            mvStateBuilder.setToPosY(moveState.toPosY);
+            mvStateBuilder.setFromPosX(moveState.fromPosX);
+            mvStateBuilder.setFromPosY(moveState.fromPosY);
+            mvStateBuilder.setStartTime(moveState.startTime);
+            //将移动状态设置给用户信息
+            userInfoBuilder.setMoveState(mvStateBuilder);
+
+
             resultBuilder.addUserInfo(userInfoBuilder);
         }
 

@@ -7,6 +7,27 @@ public class User {
     //英雄形象
     public String heroAvatar;
 
+    /**
+     * 当前血量
+     */
+    public int currHp;
+    /**
+     * 移动状态
+     */
+    public final MoveState moveState = new MoveState();
+
+    public int getCurrHp() {
+        return currHp;
+    }
+
+    public void setCurrHp(int currHp) {
+        this.currHp = currHp;
+    }
+
+    public MoveState getMoveState() {
+        return moveState;
+    }
+
     public int getUserId() {
         return userId;
     }

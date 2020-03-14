@@ -1,6 +1,9 @@
 package com.person.hero.cmdHandler;
 
 import com.person.hero.Broadcaster;
+import com.person.hero.model.MoveState;
+import com.person.hero.model.User;
+import com.person.hero.model.UserManager;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.util.AttributeKey;
 import org.slf4j.Logger;
@@ -19,12 +22,32 @@ public class UserMoveToCmdHandler implements ICmdHandler<GameMsgProtocol.UserMov
             return;
         }
 
+        //获取移动用户
+        User newUser = UserManager.getUserById(userId);
+        if(null == newUser){
+            log.info("没有找到用户，userId" + userId);
+            return;
+        }
+
+        //获取移动状态
+        MoveState moveState = newUser.getMoveState();
+        //设置位置和开始时间
+        moveState.fromPosX = msg.getMoveFromPosX();
+        moveState.fromPosY = msg.getMoveFromPosY();
+        moveState.toPosX = msg.getMoveToPosX();
+        moveState.toPosY = msg.getMoveToPosY();
+        moveState.startTime = System.currentTimeMillis();
+
+
         GameMsgProtocol.UserMoveToCmd cmd = msg;
 
         GameMsgProtocol.UserMoveToResult.Builder resultBuilder = GameMsgProtocol.UserMoveToResult.newBuilder();
         resultBuilder.setMoveUserId(userId);
-        resultBuilder.setMoveToPosY(cmd.getMoveToPosY());
-        resultBuilder.setMoveToPosX(cmd.getMoveToPosX());
+        resultBuilder.setMoveToPosY(moveState.toPosY);
+        resultBuilder.setMoveToPosX(moveState.toPosX);
+        resultBuilder.setMoveFromPosX(moveState.fromPosX);
+        resultBuilder.setMoveFromPosY(moveState.fromPosY);
+        resultBuilder.setMoveStartTime(moveState.startTime);
 
         GameMsgProtocol.UserMoveToResult newResult = resultBuilder.build();
         Broadcaster.broadcast(newResult);

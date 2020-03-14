@@ -37,4 +37,8 @@ public final class UserManager {
         return _userMap.values();
     }
 
+    public static User getUserById(int userId){
+        return _userMap.get(userId);
+    }
+
 }
