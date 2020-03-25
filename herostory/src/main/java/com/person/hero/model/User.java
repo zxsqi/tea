@@ -6,6 +6,8 @@ public class User {
     public int userId;
     //英雄形象
     public String heroAvatar;
+    //英雄名称
+    public String userName;
 
     /**
      * 当前血量

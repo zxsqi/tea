@@ -5,9 +5,13 @@ import com.person.hero.model.User;
 import com.person.hero.model.UserManager;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.util.AttributeKey;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tinygame.herostory.msg.GameMsgProtocol;
 
 public class UserAttkCmdHandler implements ICmdHandler<GameMsgProtocol.UserAttkCmd> {
+
+    private static final Logger log = LoggerFactory.getLogger(UserAttkCmdHandler.class);
 
     @Override
     public void handle(ChannelHandlerContext ctx, GameMsgProtocol.UserAttkCmd cmd) {
@@ -36,6 +40,8 @@ public class UserAttkCmdHandler implements ICmdHandler<GameMsgProtocol.UserAttkC
         if(null == targetUser){
             return;
         }
+
+        log.info("当前线程={}",Thread.currentThread().getName());
 
         int subtractUp = 10;
         targetUser.currHp = targetUser.currHp - subtractUp;

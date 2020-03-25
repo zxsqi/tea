@@ -21,15 +21,14 @@ import java.util.Map;
 public class GameMsgHandler extends SimpleChannelInboundHandler<Object> {
 
     /**
-     * 客户端信道数组, 一定要使用 static, 否则无法实现群发
-     *//*
+     * 日志对象
+     */
     private static final Logger log = LoggerFactory.getLogger(GameMsgHandler.class);
 
-    *//**
+    /**
      * 用户字典
-     *//*
-    private static final Map<Integer, User> _userMap = new HashMap<>();
-
+     */
+    /*private static final Map<Integer, User> _userMap = new HashMap<>();
     private static final ChannelGroup _channelGroup = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);*/
 
     @Override
@@ -62,12 +61,10 @@ public class GameMsgHandler extends SimpleChannelInboundHandler<Object> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
-        System.out.println("收到客户端消息, msgClazz = " + msg.getClass().getName() + ", msg = " + msg);
+        log.info("收到客户端消息, msgClazz = " + msg.getClass().getName() + ", msg = " + msg);
 
-        ICmdHandler<? extends GeneratedMessageV3> cmdHandler = CmdHandlerFactory.create(msg.getClass());
-
-        if(null != cmdHandler){
-            cmdHandler.handle(ctx,cast(msg));
+        if(msg instanceof GeneratedMessageV3){
+            MainThreadProcessor.getInstance().process(ctx,(GeneratedMessageV3) msg);
         }
 
         /*if (msg instanceof GameMsgProtocol.UserEntryCmd) {
@@ -127,12 +124,5 @@ public class GameMsgHandler extends SimpleChannelInboundHandler<Object> {
         }*/
     }
 
-    private static <TCmd extends GeneratedMessageV3> TCmd cast(Object msg){
 
-        if(null == msg){
-            return null;
-        }else {
-            return (TCmd) msg;
-        }
-    }
 }

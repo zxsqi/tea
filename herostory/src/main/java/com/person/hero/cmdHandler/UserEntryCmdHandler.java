@@ -17,20 +17,25 @@ public class UserEntryCmdHandler implements ICmdHandler<GameMsgProtocol.UserEntr
     public void handle(ChannelHandlerContext ctx, GameMsgProtocol.UserEntryCmd msg) {
         //从指令中获取英雄的ID与英雄形象
         GameMsgProtocol.UserEntryCmd cmd = msg;
-        int userId = cmd.getUserId();
-        String heroAvatar = cmd.getHeroAvatar();
+
+        //获取用户ID
+        Integer userId = (Integer) ctx.channel().attr(AttributeKey.valueOf("userId")).get();
+
+        if(null == userId){
+            return;
+        }
+
+        //获取用户信息
+        User existUser = UserManager.getUserById(userId);
+        if(null == existUser){
+            return;
+        }
+
+        String heroAvatar = existUser.getHeroAvatar();
 
         GameMsgProtocol.UserEntryResult.Builder resultBuilder = GameMsgProtocol.UserEntryResult.newBuilder();
         resultBuilder.setUserId(userId);
         resultBuilder.setHeroAvatar(heroAvatar);
-
-        User newUser = new User();
-        newUser.userId = userId;
-        newUser.heroAvatar = heroAvatar;
-        UserManager.addUser(newUser);
-
-        // 将用户 Id 附着到 Channel
-        ctx.channel().attr(AttributeKey.valueOf("userId")).set(userId);
 
         // 构建结果并发送
         GameMsgProtocol.UserEntryResult newResult = resultBuilder.build();

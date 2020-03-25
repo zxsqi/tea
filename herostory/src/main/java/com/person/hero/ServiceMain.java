@@ -23,6 +23,8 @@ public class ServiceMain {
     public static void main(String args[]){
         CmdHandlerFactory.init();
         GameMsgRecognizer.init();
+        MySqlSessionFactory.init();
+
         EventLoopGroup bossGroup = new NioEventLoopGroup(); //主线程
         EventLoopGroup workerGroup = new NioEventLoopGroup(); //从线程
 
