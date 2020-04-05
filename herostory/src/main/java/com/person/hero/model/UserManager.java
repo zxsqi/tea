@@ -3,10 +3,11 @@ package com.person.hero.model;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public final class UserManager {
 
-    private static final Map<Integer,User> _userMap = new HashMap<>();
+    private static final Map<Integer,User> _userMap = new ConcurrentHashMap<>();
 
     private UserManager(){
     }

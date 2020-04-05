@@ -59,6 +59,16 @@ public final class MainThreadProcessor {
 
     }
 
+    /**
+     * 异步处理消息
+     * @param r
+     */
+    public void process(Runnable r){
+        if(null != r){
+            _es.submit(r);
+        }
+    }
+
     private static <TCmd extends GeneratedMessageV3> TCmd cast(Object msg){
 
         if(null == msg){
